@@ -32,6 +32,13 @@ Warden::Strategies.add(:password) do
   end
 end
 
+env_index = ARGV.index("-e")
+env_arg = ARGV[env_index+1] if env_index
+@@env = env_arg || ENV["SINATRA_ENV"] || "development"
+
+
+require_relative 'models/init'
+
 class App < Sinatra::Base
 
   enable :sessions
