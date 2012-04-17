@@ -2,6 +2,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     backports (2.3.0)
+    bcrypt-ruby (3.0.1-java)
     bouncy-castle-java (1.5.0146.1)
     capistrano (2.11.2)
       highline
@@ -77,6 +78,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  bcrypt-ruby
   capistrano
   haml
   jdbc-mysql

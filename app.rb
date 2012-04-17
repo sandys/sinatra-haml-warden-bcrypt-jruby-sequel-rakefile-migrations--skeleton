@@ -18,6 +18,7 @@ Warden::Strategies.add(:password) do
     end
 =end
 
+=begin
   def authenticate!
       puts 'password strategy authenticate'
       username = params['username']
@@ -29,6 +30,13 @@ Warden::Strategies.add(:password) do
       else
         fail!('could not login')
       end
+  end
+end
+=end
+
+  def authenticate!
+    user = User.authenticate(params["username"], params["password"])
+    user.nil? ? fail!("Invalid credentials. Login failed") : success!(user, "Auth success")
   end
 end
 
@@ -115,7 +123,19 @@ class App < Sinatra::Base
       redirect '/login'
     end
   end
+  
+  get "/register/?" do
+    puts "coming to register"
+    haml :register
+  end
 
+  post "/register/?" do
+    @user = User.new
+    @user.email = params[:email]
+    @user.username = params[:username]
+    @user.password = params[:password]
+    @user.save 
+  end
 
   get "/logout/?" do
     env['warden'].logout

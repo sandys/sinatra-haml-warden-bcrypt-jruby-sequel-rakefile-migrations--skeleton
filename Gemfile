@@ -9,6 +9,7 @@ gem "sequel"
 gem "rack-protection"
 gem "capistrano"
 gem 'sinatra-reloader'
+gem 'bcrypt-ruby'
 
 gem "haml"
 #gem "ruby-debug"
