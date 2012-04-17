@@ -35,7 +35,7 @@ end
 =end
 
   def authenticate!
-    user = User.authenticate(params["username"], params["password"])
+    user = User.authenticate({:username => params["username"], :password => params["password"]})
     user.nil? ? fail!("Invalid credentials. Login failed") : success!(user, "Auth success")
   end
 end
@@ -131,10 +131,15 @@ class App < Sinatra::Base
 
   post "/register/?" do
     @user = User.new
-    @user.email = params[:email]
-    @user.username = params[:username]
-    @user.password = params[:password]
-    @user.save 
+    @user.email = params["email"]
+    @user.username = params["username"]
+    @user.password = params["password"]
+    puts "SSSS -- #{@user.inspect} and #{params["username"]}"
+    #@user.save 
+    if @user.save
+        puts 'Account created, feel free to login below'
+        redirect '/login'
+    end
   end
 
   get "/logout/?" do
@@ -154,6 +159,7 @@ class FailureApp < Sinatra::Base
     env['rack.session'][:return_to] = env['warden.options'][:attempted_path]
     puts 'failure: ' + env['REQUEST_METHOD'] + ' ' + uri
     #[302, {'Location' => '/error?uri=' + CGI::escape(uri)}, '']
-    [302, {'Location' => '/login/?'}, '']
+    #[302, {'Location' => '/login/?'}, '']
+    [401, {"Content-Type"=>"text/plain",'Location' => '/login/?'}, ['']]
   end
 end
