@@ -89,7 +89,8 @@ class App < Sinatra::Base
   enable :sessions
 
   register Sinatra::Warden
-  set :auth_failure_path, '/login'
+#  http://alex.cloudware.it/2010/04/sinatra-warden-catch.html
+  #set :auth_failure_path, '/login/?'
   use Warden::Manager do |manager|
     manager.default_strategies :password
     manager.failure_app = FailureApp.new
@@ -101,15 +102,18 @@ class App < Sinatra::Base
     super
   end
 
-  before '/admin*' do
+  before '/admin/?' do
     puts "entering admin"
     env['warden'].authenticate!
   end
 
-  get "/admin" do
+  get "/admin/?" do
     haml :admin
   end
 
+  get "/" do
+    haml :home
+  end
   
   get "/login/?" do
     puts "coming to login"
@@ -160,6 +164,9 @@ class FailureApp < Sinatra::Base
     puts 'failure: ' + env['REQUEST_METHOD'] + ' ' + uri
     #[302, {'Location' => '/error?uri=' + CGI::escape(uri)}, '']
     #[302, {'Location' => '/login/?'}, '']
-    [401, {"Content-Type"=>"text/plain",'Location' => '/login/?'}, ['']]
+    
+# do not make this 401 - if you do make sure you have a '/unauthenticated' route in your main app 
+# http://alex.cloudware.it/2010/04/sinatra-warden-catch.html    
+    [302, {"Content-Type"=>"text/plain",'Location' => '/login'}, ['']]
   end
 end
