@@ -7,3 +7,4 @@ bundle exec warble compiled  executable war
 bundle exec jruby --1.9 -S trinidad -r config.ru -g DEBUG -e development
 bundle exec jruby --1.9 -S rake db:migrate:up
  bundle exec jruby --1.9 -S trinidad -r config.ru -g DEBUG -e development
+bundle exec jruby --1.9 -S rackup
